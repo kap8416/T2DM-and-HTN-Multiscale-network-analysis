@@ -57,8 +57,7 @@ source("GEO_Data_Processing.R")
 ## Citation  
 If you use this pipeline for your research, please cite:  
 ```
-Your Name, "GEO Data Processing and Differential Expression Analysis in R", GitHub, 2025.
+Loranda Calderón-Zamora and Katia Avina-Padilla "GEO Data Processing and Differential Expression Analysis in R", GitHub, 2025.
 ```
 
-## License  
-This project is licensed under the **MIT License**.
+
