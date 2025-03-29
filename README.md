@@ -1,7 +1,7 @@
 # GO Enrichment Visualization for T2DM and HTN  
 
 ## Overview  
-This repository contains a Python script to generate **publication-quality bar plots** of Gene Ontology (GO) enrichment results for **Module 3 and Module 4**. The script processes **GO enrichment analysis output (CSV files)** and visualizes the **top 10 enriched biological processes** based on **False Discovery Rate (FDR)**.
+This repository contains a Python script to generate **bar plots** of Gene Ontology (GO) enrichment results for WCGNA **Module 3 and Module 4**. The script processes **GO enrichment analysis output (CSV files)** and visualizes the **top 10 enriched biological processes** based on **False Discovery Rate (FDR)**.
 
 ## Features  
 - Reads **enrichment results CSV files**  
