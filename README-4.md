@@ -38,8 +38,6 @@ This will create a **network visualization** and print **statistical metrics** r
 - **Community analysis** revealed **95 distinct functional clusters**, with the top three containing **54, 50, and 41 proteins**, respectively.
 - Functional clusters highlight the roles of **metabolic regulation, oxidative stress, and translational control** in T2DM.
 
-## License
-This project is released under the MIT License.
 
 ## Contact
-For inquiries, contact [Your Name or GitHub Profile].
+For inquiries, contact Katia Aviña Padilla.
