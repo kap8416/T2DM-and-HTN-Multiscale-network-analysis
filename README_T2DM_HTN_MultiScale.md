@@ -8,8 +8,10 @@ We employed a multi-scale network framework combining transcriptomic profiling, 
 
 ## Workflow Summary
 
-The workflow is ![Uploading Screenshot 2025-04-05 at 10.35.15 AM.png…]()
-composed of six main stages (also illustrated in **Figure 1** of the manuscript):
+The workflow is composed of six main stages (also illustrated in **Figure 1** of the manuscript):
+
+
+<img width="1199" alt="Screenshot 2025-04-05 at 10 38 15 AM" src="https://github.com/user-attachments/assets/68e36f84-8fda-49c9-b5dd-2d8c44ccf409" />
 
 
 
