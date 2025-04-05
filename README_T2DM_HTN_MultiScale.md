@@ -42,7 +42,65 @@ The workflow is composed of six main stages (also illustrated in **Figure 1** of
    - Community detection and enrichment performed for topological modules  
    - In-silico validation using GTEx for tissue-specific expression
 
+7. **Rewiring and Focused Hub Subnetwork Analysis**  
+   - **Dataset acquisition**: Gene expression datasets GSE25724 (T2DM) and GSE24752 (HTN) were retrieved from the [Gene Expression Omnibus (GEO)](https://www.ncbi.nlm.nih.gov/geo/).  
+   - **Platform mapping**: Probe-to-gene mapping was performed using platform annotation files GPL96 and GPL570.  
+   - **Probe aggregation**: Redundant probes mapping to the same gene were averaged to produce a single expression value per gene.  
+   - **Normalization**: Quantile normalization was applied using the `limma` package in R to reduce technical variability.  
+   - **Gene selection**: The top 100 genes with the highest absolute expression differences between T2DM and HTN were retained.  
+   - **Network construction**: Pearson correlation coefficients were computed between all gene pairs to construct condition-specific co-expression networks.  
+   - **Network representation**:  
+     - Nodes: genes  
+     - Edges: significant co-expression relationships  
+   - **Connectivity metric**: Each gene’s connectivity was defined as the sum of its absolute Pearson correlation coefficients with all other genes.  
+   - **Rewiring Score calculation**:  
+     ```
+     Rewiring Score = Connectivity in Diabetes − Connectivity in Hypertension
+     ```  
+   - **Hub prioritization**: Genes with the highest absolute rewiring scores were considered rewired hubs.  
+   - **Global rewiring network**: Constructed to represent gene pairs with significant correlation changes across conditions.  
+
+   - **Focused subnetwork extraction**:  
+     - Script: `Focused_HubSubnetwork_T2D_HTN.py`  
+     - Input:  
+       - Tab-delimited list of hub genes  
+       - PPI interaction matrix (e.g., from STRING)  
+     - Core features:  
+       - Extracts condition-specific subnetworks  
+       - Computes local connectivity metrics  
+       - Visualizes using `networkx` and `matplotlib`  
+     - Output:  
+       - Annotated visualizations of subnetworks  
+       - Exportable node and edge tables for downstream enrichment  
+     - Requirements:  
+       ```bash
+       pip install pandas networkx matplotlib
+       ```  
+     - Execution:  
+       ```bash
+       python Focused_HubSubnetwork_T2D_HTN.py
+       ```
+
+
+
+## Tool Summary by Analysis Step
+
+| Step | Analysis Component                             | Tool(s) Used                                 | Language     | Output                                |
+|------|------------------------------------------------|----------------------------------------------|--------------|----------------------------------------|
+| 1    | Data Preprocessing                             | GEOquery, limma                              | R            | Expression matrices                    |
+| 2    | Differential Expression Analysis               | limma                                        | R            | List of DEGs                           |
+| 3    | Co-expression Network Construction             | WGCNA                                        | R            | Modules, module-trait relationships    |
+| 4    | Functional Enrichment Analysis                 | clusterProfiler, org.Hs.eg.db                | R            | GO/KEGG pathway enrichment             |
+| 5    | Transcription Factor Activity Inference        | DoRothEA, VIPER                              | R            | TF activity matrices                   |
+| 6    | PPI Network and Hub Gene Identification        | STRING, networkx, matplotlib                 | Python       | PPI networks, hub gene list            |
+| 7    | Rewiring Analysis                              | limma, Pearson correlation, custom   script  | R/Python     | Rewiring scores, global rewiring graph |
+| 8    | Focused Hub Subnetwork Visualization           | networkx, matplotlib                         | Python       | Subnetwork figures, exportable tables  |
+
+
+
 ## Repository Structure
+
+
 
 ```
 ├── data/
