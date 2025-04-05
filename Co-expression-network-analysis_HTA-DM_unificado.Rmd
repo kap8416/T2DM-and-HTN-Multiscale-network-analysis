@@ -1,0 +1,257 @@
+---
+title: "Co-expression network analysis"
+author: "Loranda_Calderon"
+date: "2024-10-11"
+output: html_document
+---
+```{r}
+library(tidyverse)
+library(WGCNA)
+library(conflicted)
+options(stringsAsFactors = FALSE)
+```
+
+
+```{r}
+  uni_data <- read.csv("/Users/lorandacalderonzamora/Respaldo/LORANDA/microarreglo/Conjuto de datos/Hipertensión/GSE24752/datExprunificada .csv")
+dim(uni_data)
+names(uni_data)
+```
+
+
+```{r}
+rownames(uni_data) <- uni_data$X
+uni_data <- uni_data[, -1]
+datExpr <- as.data.frame(t(uni_data))
+```
+
+
+```{r}
+dim(datExpr)
+```
+
+
+```{r}
+gsg = goodSamplesGenes(datExpr, verbose = 3);
+gsg$allOK
+```
+
+
+```{r}
+sampleTree = hclust(dist(datExpr), method = "average");
+sizeGrWindow(12,9)
+par(cex = 0.6);
+par(mar = c(0,4,2,0))
+plot(sampleTree, main = "Sample clustering to detect outliers", sub="", xlab="", cex.lab = 1.5, 
+     cex.axis = 1.5, cex.main = 2)
+```
+
+
+```{r}
+traitData <- read.csv("/Users/lorandacalderonzamora/Respaldo/LORANDA/microarreglo/Conjuto de datos/Hipertensión/GSE24752/datMeta_unificado.csv")
+dim(traitData )
+names(traitData )
+```
+
+
+```{r}
+sampleNames <- rownames(datExpr)
+head(traitData$geo_accession)
+all(sampleNames %in% traitData$geo_accession)
+```
+
+
+```{r}
+traitRows <- match(sampleNames, traitData$geo_accession)
+datTraits <- traitData[traitRows, ]
+rownames(datTraits) <- datTraits$geo_accession
+```
+
+
+```{r}
+datTraits[] <- lapply(datTraits, function(x) {
+  if (is.character(x) || is.factor(x)) {
+    as.numeric(as.factor(x))
+  } else {
+    x  
+  }
+})
+datTraits_clean <- datTraits[, sapply(datTraits, is.numeric)]
+
+str(datTraits_clean)
+```
+
+
+```{r}
+sampleTree2 <- hclust(dist(datExpr), method = "average")
+traitColors <- numbers2colors(datTraits_clean, signed = FALSE)
+plotDendroAndColors(sampleTree2, traitColors,
+                    groupLabels = names(datTraits_clean),
+                    main = "Sample dendrogram and trait heatmap")
+```
+
+
+```{r}
+save(datExpr, datTraits_clean, file = "HTA-DMdataInput.RData")
+```
+
+
+```{r}
+lnames = load(file = "HTA-DMdataInput.RData");
+#The variable lnames contains the names of loaded variables.
+lnames
+```
+
+
+```{r}
+# Filter the least variable genes (optional)
+variance_genes <- apply(datExpr, 2, var)
+datExpr_filtered <- datExpr[, variance_genes > quantile(variance_genes, 0.60)]
+```
+
+
+```{r}
+# Select a narrower range of powers due to few samples
+powers = c(1:10)  
+
+sft = pickSoftThreshold(datExpr_filtered, powerVector = powers, verbose = 5)
+
+sizeGrWindow(9, 5)
+par(mfrow = c(1, 2))
+cex1 = 0.9
+
+plot(sft$fitIndices[,1], -sign(sft$fitIndices[,3]) * sft$fitIndices[,2],
+     xlab = "Soft Threshold (power)", 
+     ylab = "Scale Free Topology Model Fit, signed R^2", type = "n",
+     main = "Scale independence")
+text(sft$fitIndices[,1], -sign(sft$fitIndices[,3]) * sft$fitIndices[,2], 
+     labels = powers, cex = cex1, col = "red")
+abline(h = 0.80, col = "red")
+
+plot(sft$fitIndices[,1], sft$fitIndices[,5],
+     xlab = "Soft Threshold (power)", 
+     ylab = "Mean Connectivity", type = "n",
+     main = "Mean connectivity")
+text(sft$fitIndices[,1], sft$fitIndices[,5], labels = powers, cex = cex1, col = "red")
+```
+
+```{r}
+net = blockwiseModules(
+  datExpr, 
+  power = 6,  
+  TOMType = "unsigned",  
+  minModuleSize = 200,  
+  reassignThreshold = 0, 
+  mergeCutHeight = 0.20,  
+  numericLabels = TRUE, 
+  pamRespectsDendro = FALSE,  
+  saveTOMs = TRUE, 
+  saveTOMFileBase = "TOM_unification",  
+  verbose = 3
+)
+```
+
+
+```{r}
+
+sizeGrWindow(12, 9)
+
+mergedColors = labels2colors(net$colors)
+
+for (i in 1:length(net$dendrograms)) {
+  plotDendroAndColors(
+    net$dendrograms[[i]],            
+    mergedColors[net$blockGenes[[i]]],  
+    "Module colors",                  
+    dendroLabels = FALSE, 
+    hang = 0.03,                      
+    addGuide = TRUE, guideHang = 0.05 
+  )
+}
+```
+
+
+```{r}
+table(net$colors)  # Gene counts per module
+```
+
+
+```{r}
+MEs = net$MEs  # # Module Eigengene
+
+moduleTraitCor = cor(MEs, datTraits_clean, use = "pairwise.complete.obs")
+
+moduleTraitPvalue = corPvalueStudent(moduleTraitCor, nrow(datExpr))
+
+print(moduleTraitCor)  
+print(moduleTraitPvalue)  
+```
+
+
+```{r}
+# Extract the correlations and p-values for the trait "Disease"
+cor_Disease = moduleTraitCor[, "Disease"]
+pval_Disease = moduleTraitPvalue[, "Disease"]
+
+best_module = which.max(abs(cor_Disease))
+
+print(paste("Most significant module:", names(cor_Disease)[best_module]))
+print(paste("Correlation:", cor_Disease[best_module]))
+print(paste("P-value:", pval_Disease[best_module]))
+```
+
+
+```{r}
+module4_genes = names(datExpr)[net$colors == 4]
+module3_genes = names(datExpr)[net$colors == 3]
+head(module4_genes)
+str(module4_genes)
+
+write.csv(module4_genes, "Module_Eigengene_ME4_unification.csv", row.names = FALSE)
+write.csv(module3_genes, "Module_Eigengene_ME3_unification.csv", row.names = FALSE)
+```
+
+
+```{r}
+# PPI network analysis
+library(STRINGdb)
+string_db <- STRINGdb$new(version = "11.5", species = 9606, 
+                          score_threshold = 400, input_directory = "")
+```
+
+
+```{r}
+# Mapping Module 16 genes and visualizing Protein-Protein Interaction Network
+module4_genes <- gsub("\\..*", "", module4_genes)
+df_genes <- data.frame(ENSEMBL = module4_genes)
+mapped_genes <- string_db$map(df_genes, "ENSEMBL", removeUnmappedRows = TRUE)
+
+print(head(mapped_genes))
+```
+
+```{r}
+unmapped_genes <- base::setdiff(df_genes$ENSEMBL, mapped_genes$ENSEMBL)
+print(unmapped_genes)
+```
+
+```{r}
+string_db$plot_network(mapped_genes$STRING_id)
+```
+
+
+```{r}
+library(org.Hs.eg.db)
+# Functional enrichment analysis
+enrichment_results_GO <- string_db$get_enrichment(
+  string_ids = mapped_genes$STRING_id,  
+  category = "Process",  # GO "Process" or "Pathway" by KEGG
+  methodMT = "fdr",  
+  iea = FALSE  
+)
+
+head(enrichment_results_GO)
+
+write.csv(enrichment_results_GO, "enrichment_results_GO_module4.csv", row.names = FALSE)
+```
+
+
