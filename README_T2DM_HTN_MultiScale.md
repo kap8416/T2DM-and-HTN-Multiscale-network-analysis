@@ -8,7 +8,11 @@ We employed a multi-scale network framework combining transcriptomic profiling, 
 
 ## Workflow Summary
 
-The workflow is composed of six main stages (also illustrated in **Figure 1** of the manuscript):
+The workflow is ![Uploading Screenshot 2025-04-05 at 10.35.15 AM.png…]()
+composed of six main stages (also illustrated in **Figure 1** of the manuscript):
+
+
+
 
 1. **Data Preprocessing**  
    - Transcriptomic dataset acquisition  
@@ -70,16 +74,13 @@ This project requires the following tools and packages:
 
 If you use this repository or adapt the scripts for your own work, please cite the following study:
 
-> Aviña-Padilla K. et al. *Inflammatory and Vascular Remodeling Pathways link Type 2 Diabetes and Hypertension: A Multi-Scale Network Analysis*. (In preparation, 2025).
+> *Inflammatory and Vascular Remodeling Pathways link Type 2 Diabetes and Hypertension: A Multi-Scale Network Analysis*. (In preparation, 2025).
 
-## License
-
-This project is licensed under the MIT License. See the LICENSE file for details.
 
 ## Contact
 
 For questions, suggestions, or collaboration opportunities, please contact:
 
 **Katia Aviña Padilla**  
-Postdoctoral Researcher, CINVESTAV - Irapuato  
-[ResearchGate](https://www.researchgate.net/profile/Katia-Avina-Padilla) | [Email](mailto:katia.avina@cinvestav.mx)
+CINVESTAV - Irapuato  
+[ResearchGate](https://www.researchgate.net/profile/Katia-Avina-Padilla) | [Email](mailto:katia.avinap@cinvestav.mx)
