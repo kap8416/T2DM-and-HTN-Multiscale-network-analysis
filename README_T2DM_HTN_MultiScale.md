@@ -134,7 +134,7 @@ This project requires the following tools and packages:
 
 If you use this repository or adapt the scripts for your own work, please cite the following study:
 
-> *Inflammatory and Vascular Remodeling Pathways link Type 2 Diabetes and Hypertension: A Multi-Scale Network Analysis*. (In preparation, 2025).
+> *Inflammatory and Vascular Remodeling Pathways link Type 2 Diabetes and Hypertension: A Multi-Scale Network Analysis*. (In preparation, Frontiers in Bioscience 2025).
 
 
 ## Contact
