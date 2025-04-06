@@ -11,7 +11,8 @@ We employed a multi-scale network framework combining transcriptomic profiling, 
 The workflow is composed of six main stages (also illustrated in **Figure 1** of the manuscript):
 
 
-<img width="1199" alt="Pipeline.jpeg" />
+![Pipeline de análisis](Pipeline.jpeg)
+
 
 
 
