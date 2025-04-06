@@ -11,8 +11,7 @@ We employed a multi-scale network framework combining transcriptomic profiling, 
 The workflow is composed of six main stages (also illustrated in **Figure 1** of the manuscript):
 
 
-<img width="1199" alt="![WhatsApp Image 2025-04-06 at 12 10 38 (1)](https://github.com/user-attachments/assets/e8d310e1-06a5-4467-ae4d-030c73a5a933)
-" />
+<img width="1199" alt="Pipeline.jpeg)" />
 
 
 
